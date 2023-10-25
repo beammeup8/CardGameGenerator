@@ -66,4 +66,12 @@ def convert_to_flashcards(wordSource, picSource):
   output_pdf(words, picSource, wordSource[:-4] + ".pdf")
 
 if __name__ == "__main__":
-  convert_to_flashcards("HalloweenPhrases.csv","pumpkin.png")
+  import argparse
+  parser = argparse.ArgumentParser(
+    prog='Printable CardGame Generator',
+    description='Takes a csv file and converts it to a pdf that can be printed and cut out to be used for games such as charades, codenames, or freedom of speech'
+  )
+  parser.add_argument('filename', help='csv file containing the list of the words/ phrases, one per line') 
+  parser.add_argument('-p', metavar='picture path', help='location of the image to use as the back of the cards')
+  args = parser.parse_args()
+  convert_to_flashcards(args.filename, args.p)
