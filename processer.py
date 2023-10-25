@@ -26,7 +26,8 @@ def get_word_list(fileName):
 def output_pdf(words, picture, newFileName):
   doc = SimpleDocTemplate(newFileName, pagesize=letter)
   
-  a = Image(picture, 2*inch, 2*inch)  
+  if picture:
+    a = Image(picture, 2*inch, 2*inch)  
 
   elements = []
   data = []
@@ -40,7 +41,7 @@ def output_pdf(words, picture, newFileName):
   #style.setFont('DarkGardenMK', FONT_SIZE)
   for i in range(0, len(words), COL_COUNT):
     # add the card backs where needed
-    if i % page_entry == 0 and i != 0:
+    if picture and i % page_entry == 0 and i != 0:
       for j in range(ROW_COUNT):
         data.append([a for k in range(COL_COUNT)])
     # add the current row of words
@@ -64,5 +65,5 @@ def convert_to_flashcards(wordSource, picSource):
   words = get_word_list(wordSource)
   output_pdf(words, picSource, wordSource[:-4] + ".pdf")
 
-
-convert_to_flashcards("HalloweenPhrases.csv", "pumpkin.png")
+if __name__ == "__main__":
+  convert_to_flashcards("HalloweenPhrases.csv","pumpkin.png")
