@@ -1,8 +1,12 @@
 # CardGameGenerator
-Generate card games with a consistent image on the back, and different strings for each card ad provided in a csv file. You can then just print the generated pdf out and cut out the individual cards and substitute them for the standard cards in your game of choice, or use them to make your own card based games.
+Generate card games with a consistent image on the back, and different strings for each card are provided in a csv file. You can then just print the generated pdf out and cut out the individual cards and substitute them for the standard cards in your game of choice, or use them to make your own card based games. 
 
 ## Usage
 The script is run from the command line and takes a csv file to convert (tsv, or txt file with one entry per line will work as well is desired, however if the extension is not 3 characters long then the output filename may not be correct), and an optional picture to print on the back of the cards.  
+
+If you would prefer to print them single sided with no image on the back simply omit the image parameter.
+
+You will always get a full sheet of cards, so any empty ones at the end can be saved and used as wildcards in the future.
 
 If you use the -h option you get the full help documents as listed here:
 ```
