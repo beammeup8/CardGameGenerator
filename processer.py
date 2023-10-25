@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
+import math
 
 
 FONT_SIZE = 18
@@ -21,6 +22,12 @@ def get_word_list(fileName):
   return lines
 
 def output_pdf(words, picture, newFileName):
+  # Makes sure the final column is always full 
+  # by adding spare cards that can be filled in later
+  if len(words) % COL_COUNT != 0:
+    for i in range(COL_COUNT - len(words) % COL_COUNT ):
+      words.append("") 
+  
   doc = SimpleDocTemplate(newFileName, pagesize=letter)
   x,y = letter
 
@@ -45,6 +52,16 @@ def output_pdf(words, picture, newFileName):
     # add the current row of words
     data.append([Paragraph(words[i+k], style) for k in range(COL_COUNT)])
     
+  # add the empty spaces to finish the page
+  over_count = len(words) % page_entry
+  curr_rows = math.ceil(over_count/ROW_COUNT)
+  for i in range(curr_rows, ROW_COUNT, COL_COUNT):
+    data.append(["" for j  in range(COL_COUNT)])
+
+  # add the pictures for the page
+  if picture:
+    for j in range(ROW_COUNT):
+      data.append([a for k in range(COL_COUNT)])
   
   t=Table(data, x/COL_COUNT, y/(ROW_COUNT + 1))
   t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
