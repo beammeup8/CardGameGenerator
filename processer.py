@@ -1,10 +1,12 @@
 #!/usr/bin/python
 
 def get_word_list(fileName):
-  file = open(fileName, "r")
-  lines = file.readlines()
-  file.close()
+  lines = []
+  with open(fileName, "r") as file:
+    lines = file.readlines()
+    file.close()
+  
   print(lines)
 
 
-get_word_list("Halloween words and puns - Sheet1.csv")
+get_word_list("HalloweenPhrases.csv")
