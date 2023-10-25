@@ -1,12 +1,61 @@
 #!/usr/bin/python
 
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.lib.pagesizes import LETTER
+from reportlab.platypus import Paragraph, Table, TableStyle, Image
+from reportlab.lib.units import cm, inch
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+
+FONT_SIZE = 18
+ROW_COUNT = 4
+COL_COUNT = 2
+
 def get_word_list(fileName):
   lines = []
   with open(fileName, "r") as file:
     txt = file.read()
     file.close()
     lines = txt.splitlines()
-  print(lines)
+  return lines
+
+def output_pdf(words, picture, newFileName):
+  doc = SimpleDocTemplate(newFileName, pagesize=letter)
+  
+  a = Image(picture, 2*inch, 2*inch)  
+
+  elements = []
+  data = []
+  page_entry =ROW_COUNT * COL_COUNT
+  print(page_entry)
+  style = getSampleStyleSheet()['Normal']
+  for i in range(0, len(words), COL_COUNT):
+    # add the card backs where needed
+    if i % page_entry == 0 and i != 0:
+      for j in range(ROW_COUNT):
+        data.append([a for k in range(COL_COUNT)])
+    # add the current row of words
+    data.append([Paragraph(words[i+k], style) for k in range(COL_COUNT)])
+    
+  x,y = letter
+  t=Table(data, x/COL_COUNT, y/(ROW_COUNT + 1))
+  t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('FONTSIZE', (0,0), (-1,-1), FONT_SIZE),
+                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                        ]))
+
+  elements.append(t)
+  # write the document to disk
+  doc.build(elements)
 
 
-get_word_list("HalloweenPhrases.csv")
+def convert_to_flashcards(wordSource, picSource):
+  words = get_word_list(wordSource)
+  output_pdf(words, picSource, wordSource[:-4] + ".pdf")
+
+
+convert_to_flashcards("HalloweenPhrases.csv", "pumpkin.png")
