@@ -25,13 +25,14 @@ def get_word_list(fileName):
 
 def output_pdf(words, picture, newFileName):
   doc = SimpleDocTemplate(newFileName, pagesize=letter)
-  
+  x,y = letter
+
   if picture:
-    a = Image(picture, 2*inch, 2*inch)  
+    a = Image(picture, (0.9*x)/COL_COUNT, (0.9*y)/ROW_COUNT)  
 
   elements = []
   data = []
-  page_entry =ROW_COUNT * COL_COUNT
+  page_entry = ROW_COUNT * COL_COUNT
   style = ParagraphStyle(
     name='Normal',
     fontSize=FONT_SIZE,
@@ -47,7 +48,7 @@ def output_pdf(words, picture, newFileName):
     # add the current row of words
     data.append([Paragraph(words[i+k], style) for k in range(COL_COUNT)])
     
-  x,y = letter
+  
   t=Table(data, x/COL_COUNT, y/(ROW_COUNT + 1))
   t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
                         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
