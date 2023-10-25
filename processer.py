@@ -7,7 +7,9 @@ from reportlab.lib.units import cm, inch
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+
 
 FONT_SIZE = 18
 ROW_COUNT = 4
@@ -29,8 +31,13 @@ def output_pdf(words, picture, newFileName):
   elements = []
   data = []
   page_entry =ROW_COUNT * COL_COUNT
-  print(page_entry)
-  style = getSampleStyleSheet()['Normal']
+  style = ParagraphStyle(
+    name='Normal',
+    fontSize=FONT_SIZE,
+    alignment=TA_CENTER,
+    leading=FONT_SIZE
+  )
+  #style.setFont('DarkGardenMK', FONT_SIZE)
   for i in range(0, len(words), COL_COUNT):
     # add the card backs where needed
     if i % page_entry == 0 and i != 0:
