@@ -1,14 +1,11 @@
 #!/usr/bin/python
 
-from reportlab.pdfgen.canvas import Canvas
-from reportlab.lib.pagesizes import LETTER
 from reportlab.platypus import Paragraph, Table, TableStyle, Image
-from reportlab.lib.units import cm, inch
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.lib.enums import TA_CENTER
 
 
 FONT_SIZE = 18
