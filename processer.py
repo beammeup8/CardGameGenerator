@@ -3,9 +3,9 @@
 def get_word_list(fileName):
   lines = []
   with open(fileName, "r") as file:
-    lines = file.readlines()
+    txt = file.read()
     file.close()
-  
+    lines = txt.splitlines()
   print(lines)
 
 
