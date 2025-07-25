@@ -13,12 +13,18 @@ FONT_SIZE = 18
 ROW_COUNT = 4
 COL_COUNT = 2
 
-def get_word_list(fileName):
+def get_word_list(fileName, hasHeader, addNewLines):
   lines = []
   with open(fileName, "r") as file:
     txt = file.read()
     file.close()
     lines = txt.splitlines()
+  if hasHeader:
+    lines = lines[1:]
+
+  if addNewLines:
+    lines = [line.replace(" (", "<br/>(") for line in lines]
+  
   return lines
 
 def output_pdf(words, picture, newFileName):
@@ -43,7 +49,8 @@ def output_pdf(words, picture, newFileName):
     alignment=TA_CENTER,
     leading=FONT_SIZE
   )
-  #style.setFont('DarkGardenMK', FONT_SIZE)
+  
+  
   for i in range(0, len(words), COL_COUNT):
     # add the card backs where needed
     if picture and i % page_entry == 0 and i != 0:
@@ -76,10 +83,8 @@ def output_pdf(words, picture, newFileName):
   doc.build(elements)
 
 
-def convert_to_flashcards(wordSource, picSource, hasHeader):
-  words = get_word_list(wordSource)
-  if hasHeader:
-    words = words[1:]
+def convert_to_flashcards(wordSource, picSource, hasHeader, addNewLines):
+  words = get_word_list(wordSource, hasHeader, addNewLines)
   output_pdf(words, picSource, wordSource[:-4] + ".pdf")
 
 if __name__ == "__main__":
@@ -91,6 +96,7 @@ if __name__ == "__main__":
   parser.add_argument('filename', help='csv file containing the list of the words/ phrases, one per line') 
   parser.add_argument('-p', metavar='picture path', help='location of the image to use as the back of the cards')
   parser.add_argument('-f', action='store_true', help='flag to say that the first line is a header and should be ignored.')
+  parser.add_argument('-n', action='store_true', help='flag to add a newline around parenthesis')
 
   args = parser.parse_args()
-  convert_to_flashcards(args.filename, args.p, args.f)
+  convert_to_flashcards(args.filename, args.p, args.f, args.n)
