@@ -76,8 +76,10 @@ def output_pdf(words, picture, newFileName):
   doc.build(elements)
 
 
-def convert_to_flashcards(wordSource, picSource):
+def convert_to_flashcards(wordSource, picSource, hasHeader):
   words = get_word_list(wordSource)
+  if hasHeader:
+    words = words[1:]
   output_pdf(words, picSource, wordSource[:-4] + ".pdf")
 
 if __name__ == "__main__":
@@ -88,5 +90,7 @@ if __name__ == "__main__":
   )
   parser.add_argument('filename', help='csv file containing the list of the words/ phrases, one per line') 
   parser.add_argument('-p', metavar='picture path', help='location of the image to use as the back of the cards')
+  parser.add_argument('-f', action='store_true', help='flag to say that the first line is a header and should be ignored.')
+
   args = parser.parse_args()
-  convert_to_flashcards(args.filename, args.p)
+  convert_to_flashcards(args.filename, args.p, args.f)
