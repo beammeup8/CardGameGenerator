@@ -32,7 +32,7 @@ def output_pdf(words, picture, newFileName):
   x,y = letter
 
   if picture:
-    a = Image(picture, (0.9*x)/COL_COUNT, (0.9*y)/ROW_COUNT)  
+    a = Image(picture, (0.8*x)/COL_COUNT, (0.8*y)/ROW_COUNT)  
 
   elements = []
   data = []
