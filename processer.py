@@ -13,6 +13,10 @@ FONT_SIZE = 18
 ROW_COUNT = 4
 COL_COUNT = 2
 
+TABLE_STYLE_START = (0,0)
+TABLE_STYLE_END = (-1,-1)
+IMAGE_SCALE = 0.8
+
 def get_word_list(fileName, hasHeader, addNewLines):
   lines = []
   with open(fileName, "r") as file:
@@ -27,18 +31,20 @@ def get_word_list(fileName, hasHeader, addNewLines):
   
   return lines
 
-def output_pdf(words, picture, newFileName):
+def fill_out_list(words):
   # Makes sure the final column is always full 
   # by adding spare cards that can be filled in later
-  if len(words) % COL_COUNT != 0:
-    for i in range(COL_COUNT - len(words) % COL_COUNT ):
-      words.append("") 
-  
+  per_page = COL_COUNT * ROW_COUNT
+  words.extend([''] * (per_page - (len(words) % per_page)))
+  return words
+
+def output_pdf(words, picture, newFileName):
+
   doc = SimpleDocTemplate(newFileName, pagesize=letter)
   x,y = letter
 
   if picture:
-    a = Image(picture, (0.8*x)/COL_COUNT, (0.8*y)/ROW_COUNT)  
+    a = Image(picture, (IMAGE_SCALE*x)/COL_COUNT, (IMAGE_SCALE*y)/ROW_COUNT)  
 
   elements = []
   data = []
@@ -50,6 +56,8 @@ def output_pdf(words, picture, newFileName):
     leading=FONT_SIZE
   )
   
+    
+  words = fill_out_list(words)
   
   for i in range(0, len(words), COL_COUNT):
     # add the card backs where needed
@@ -58,12 +66,6 @@ def output_pdf(words, picture, newFileName):
         data.append([a for k in range(COL_COUNT)])
     # add the current row of words
     data.append([Paragraph(words[i+k], style) for k in range(COL_COUNT)])
-    
-  # add the empty spaces to finish the page
-  over_count = len(words) % page_entry
-  curr_rows = math.ceil(over_count/ROW_COUNT)
-  for i in range(curr_rows, ROW_COUNT, COL_COUNT):
-    data.append(["" for j  in range(COL_COUNT)])
 
   # add the pictures for the page
   if picture:
@@ -71,11 +73,11 @@ def output_pdf(words, picture, newFileName):
       data.append([a for k in range(COL_COUNT)])
   
   t=Table(data, x/COL_COUNT, y/(ROW_COUNT + 1))
-  t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),
-                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                        ('FONTSIZE', (0,0), (-1,-1), FONT_SIZE),
-                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+  t.setStyle(TableStyle([('ALIGN',TABLE_STYLE_START,TABLE_STYLE_END,'CENTER'),
+                        ('VALIGN',TABLE_STYLE_START, TABLE_STYLE_END, 'MIDDLE'),
+                        ('FONTSIZE', TABLE_STYLE_START, TABLE_STYLE_END, FONT_SIZE),
+                        ('INNERGRID', TABLE_STYLE_START, TABLE_STYLE_END, 0.25, colors.black),
+                        ('BOX', TABLE_STYLE_START, TABLE_STYLE_END, 0.25, colors.black),
                         ]))
 
   elements.append(t)
